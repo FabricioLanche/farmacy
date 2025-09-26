@@ -1,6 +1,7 @@
 package com.example.farmacy.usuario.domain;
 
 
+import com.example.farmacy.admin.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class Usuario {
     private String email;
     private Integer dni;
     //private String telefono;
+    private Role role;
 
 
 }
