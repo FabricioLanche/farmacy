@@ -1,11 +1,7 @@
-package com.example.farmacy.usuario.domain;
+package com.example.farmacy.admin;
 
 
-import com.example.farmacy.admin.Role;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,27 +10,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Entity
 @Data
-public class Usuario implements UserDetails {
+@Entity
+public class Admin implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String nombre;
-    private String apellido;
     private String email;
-    private Long dni;
+
     private String password;
-    //private String telefono;
-    private Role role;
 
-    private Boolean expired = false;
-
-    private Boolean locked = false;
-
-    private Boolean credentialsExpired = false;
-
-    private Boolean enable = true;
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ADMINISTRADOR; // Default to admin
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,30 +29,32 @@ public class Usuario implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return this.password; // Return actual password
+    }
+
+    @Override
     public String getUsername() {
-        return email;
+        return this.email; // Use email as username
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return !expired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !locked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !credentialsExpired;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return enable;
+        return true;
     }
-
-
-
 }

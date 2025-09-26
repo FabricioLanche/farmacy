@@ -1,7 +1,10 @@
 package com.example.farmacy.auth;
 
 
+import com.example.farmacy.admin.dto.NuevoAdmin;
+import com.example.farmacy.security.AuthenticationService;
 import com.example.farmacy.security.JwtAuthenticationResponse;
+import com.example.farmacy.security.dto.SigninRequest;
 import com.example.farmacy.usuario.domain.Usuario;
 import com.example.farmacy.usuario.dto.NuevoUsuario;
 import com.example.farmacy.usuario.infrastructure.UsuarioRepository;
@@ -20,18 +23,12 @@ public class AuthController {
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
-    private JwtAuthenticationResponse jwtAuthenticationService;
+    private AuthenticationService authenticationService;
 
 
-    @PostMapping("/signup/cliente")
+    @PostMapping("/signup/paciente")
     public ResponseEntity<JwtAuthenticationResponse> signupCliente(@RequestBody @Valid NuevoUsuario request) {
-        return ResponseEntity.ok(authenticationService.signupCliente(request));
-    }
-
-    @PostMapping("/signup/profesional")
-    public ResponseEntity<String> signupProfesional(@RequestBody @Valid ProfLimpiezaDto request) {
-        authenticationService.signupProfesional(request);
-        return ResponseEntity.ok("Tu solicitud ha sido enviada. Te contactaremos una vez aprobada.");
+        return ResponseEntity.ok(authenticationService.signupPaciente(request));
     }
 
     @PostMapping("/login")
