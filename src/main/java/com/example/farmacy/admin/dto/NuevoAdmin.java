@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class NuevoAdmin {
-    private String secret;
+
+    private String email;
+    private String password;
 
 }
