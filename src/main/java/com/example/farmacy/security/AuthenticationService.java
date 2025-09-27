@@ -77,6 +77,7 @@ public class AuthenticationService {
         String jwt = jwtService.generateToken(user);
         return new JwtAuthenticationResponse(jwt);
     }
+
     public JwtAuthenticationResponse loginAdminFijo(String email, String password) {
         System.out.println("Email recibido: " + email);
         System.out.println("Esperado: " + adminEmail);

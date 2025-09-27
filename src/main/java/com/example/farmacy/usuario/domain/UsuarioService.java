@@ -19,19 +19,16 @@ public class UsuarioService {
     public Usuario guardarUsuario(NuevoUsuario nuevoUsuario) {
 
         if (nuevoUsuario.getDni() != null && usuarioRepository.existsById(nuevoUsuario.getDni())) {
-
             Usuario existingUsuario = usuarioRepository.findById(nuevoUsuario.getDni())
                     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
             modelMapper.map(nuevoUsuario, existingUsuario);
-
             return usuarioRepository.save(existingUsuario);
         } else {
             Usuario usuario = modelMapper.map(nuevoUsuario, Usuario.class);
-
             return usuarioRepository.save(usuario);
         }
     }
+
     public Usuario actualizarUsuario(Long id, NuevoUsuario nuevoUsuario) {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

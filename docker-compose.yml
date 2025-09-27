@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: farmacy-postgres
+    environment:
+      POSTGRES_DB: farmacia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - farmacy-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Aplicación Spring Boot
+  farmacy-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: farmacy-backend
+    environment:
+      # Variables de base de datos
+      JDBC_DATABASE_URL: jdbc:postgresql://postgres:5432/farmacia
+      JDBC_DATABASE_USERNAME: postgres
+      JDBC_DATABASE_PASSWORD: 12345
+
+      # Variables de JWT y Admin
+      JWT_SECRET: "fbQffmdkyitZ3rgo4TM0PBoMbGA442AkPkrmMZpTvsgDvc8UOIwSPwzSeolntqjQEGXvLln2vwCyJ7WAXrfqcw=="
+      ADMIN_SECRET: "jFqTw7ELKzMNv2UgaWn5A1Z9tXReyqJCPk83YV6oFmdGXbKspbqJhLKxO5uPIR3AQqVz+stY6pJgA4mcWxkKzQ=="
+      ADMIN_EMAIL: admin@klin.com
+      ADMIN_PASS: "$2a$12$Vxhy2nveLhiYIozp/0QKwOxIkfkAj8Ib3k8xcZY2mfhyPzwxKET7y"
+
+      # Perfil de Spring
+      SPRING_PROFILES_ACTIVE: prod
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - farmacy-network
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+networks:
+  farmacy-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

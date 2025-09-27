@@ -25,7 +25,6 @@ public class Usuario implements UserDetails {
     private String email;
     private Long dni;
     private String password;
-    //private String telefono;
     private Role role;
 
     private Boolean expired = false;

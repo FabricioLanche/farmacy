@@ -1,0 +1,28 @@
+# Ignorar archivos innecesarios para Docker
+target/
+.git/
+.gitignore
+README.md
+.env
+.env.local
+.env.*.local
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+.mvn/wrapper/maven-wrapper.properties
+
+# Spring Boot
+HELP.md

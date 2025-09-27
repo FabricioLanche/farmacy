@@ -12,6 +12,8 @@ public class NuevoUsuario {
     @NotNull
     private String apellido;
     @NotNull
+    private String password;
+    @NotNull
     @Email
     private String email;
     @NotNull

@@ -1,6 +1,4 @@
 package com.example.farmacy.auth;
-
-
 import com.example.farmacy.admin.AdminNotFound;
 import com.example.farmacy.admin.dto.NuevoAdmin;
 import com.example.farmacy.security.AuthenticationService;
@@ -16,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Data
 @RestController
 @RequestMapping("/auth")
@@ -26,7 +22,6 @@ public class AuthController {
     private UsuarioRepository usuarioRepository;
     @Autowired
     private AuthenticationService authenticationService;
-
 
     @PostMapping("/signup")
     public ResponseEntity<JwtAuthenticationResponse> signupCliente(@RequestBody @Valid NuevoUsuario request) {
@@ -48,6 +43,21 @@ public class AuthController {
         } catch (InvalidCredentialsUser | AdminNotFound e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas");
         }
+    }
 
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            if (usuarioRepository.existsById(id)) {
+                usuarioRepository.deleteById(id);
+                return ResponseEntity.ok().body("Usuario eliminado exitosamente");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Usuario no encontrado con ID: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el usuario: " + e.getMessage());
+        }
     }
 }
