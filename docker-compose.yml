@@ -9,25 +9,6 @@ services:
       - "8080:8080"
     restart: unless-stopped
     environment:
-      # Spring Boot configuración
-      - SPRING_DATASOURCE_URL=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      - SPRING_DATASOURCE_USERNAME=${DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_SHOW_SQL=false
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
-      
-      # JWT Configuration
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_EXPIRATION=${JWT_EXPIRATION}
-      
-      # Admin Configuration
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-      - ADMIN_FIRSTNAME=${ADMIN_FIRSTNAME}
-      - ADMIN_LASTNAME=${ADMIN_LASTNAME}
-      - ADMIN_DNI=${ADMIN_DNI}
-      
       # Java Options
       - JAVA_OPTS=-Xmx512m -Xms256m
     healthcheck:
