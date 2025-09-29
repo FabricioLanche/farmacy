@@ -13,14 +13,10 @@ import java.util.Map;
 @RequestMapping("")
 public class HealthController {
 
-    @Value("${spring.application.name:farmacy}")
-    private String applicationName;
-
     @GetMapping("/echo")
     public ResponseEntity<Map<String, Object>> echo() {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "¡Hola! El servidor está funcionando correctamente");
-        response.put("application", applicationName);
         response.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         response.put("status", "UP");
 

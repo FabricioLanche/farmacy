@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/echo/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/event", "/api/event/*", "/api/restaurant/*").permitAll()
                         .anyRequest().authenticated()
                 )
