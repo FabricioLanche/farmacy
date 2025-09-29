@@ -1,5 +1,6 @@
+version: '3.8'
+
 services:
-  # Spring Boot Backend Service
   farmacy-api:
     build: .
     container_name: pharmavida_farmacy_backend
@@ -9,10 +10,19 @@ services:
       - "8080:8080"
     restart: unless-stopped
     environment:
-      # Java Options
       - JAVA_OPTS=-Xmx512m -Xms256m
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRATION=${JWT_EXPIRATION}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ADMIN_FIRSTNAME=${ADMIN_FIRSTNAME}
+      - ADMIN_LASTNAME=${ADMIN_LASTNAME}
+      - ADMIN_DNI=${ADMIN_DNI}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
