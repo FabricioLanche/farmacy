@@ -6,16 +6,7 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de configuración de Maven
-COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
-
-# Descargar dependencias (se cachea si pom.xml no cambia)
-RUN mvn dependency:go-offline -B
-
-# Copiar código fuente
-COPY src ./src
+COPY . .
 
 # Compilar la aplicación (skip tests para build más rápido)
 RUN mvn clean package -DskipTests
@@ -23,11 +14,20 @@ RUN mvn clean package -DskipTests
 # Stage 2: Runtime
 FROM eclipse-temurin:17-jre-alpine
 
+# Crear usuario no-root para seguridad
+RUN addgroup -S spring && adduser -S spring -G spring
+
 # Establecer directorio de trabajo
 WORKDIR /app
 
 # Copiar el JAR compilado desde el stage de build
 COPY --from=build /app/target/*.jar app.jar
+
+# Cambiar permisos
+RUN chown spring:spring app.jar
+
+# Cambiar a usuario no-root
+USER spring:spring
 
 # Exponer el puerto por defecto de Spring Boot
 EXPOSE 8080
