@@ -16,9 +16,10 @@ out/
 .project
 .factorypath
 
-# Maven
-.mvn/wrapper/maven-wrapper.jar
-.mvn/wrapper/maven-wrapper.properties
+# Maven (comentado porque se necesita para el build)
+# .mvn/
+# mvnw
+# mvnw.cmd
 
 # Git
 .git

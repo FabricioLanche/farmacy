@@ -39,7 +39,9 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
-.mvn/wrapper/maven-wrapper.jar
+# .mvn/wrapper/maven-wrapper.jar (necesario para build)
+# mvnw (necesario para build)
+# mvnw.cmd (necesario para build)
 
 # Gradle
 .gradle
