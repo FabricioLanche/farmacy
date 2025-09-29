@@ -1,41 +1,35 @@
-package com.example.farmacy.admin;
+package com.example.farmacy.security.domain;
 
-
-import jakarta.persistence.*;
-import lombok.Data;
+import com.example.farmacy.usuario.domain.User;
+import com.example.farmacy.usuario.domain.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
-@Data
-@Entity
-public class Admin implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String email;
+public class CustomUserDetails implements UserDetails {
 
-    private String password;
+    private final User user;
 
-    @Enumerated(EnumType.STRING)
-    private Role role = Role.ADMINISTRADOR; // Default to admin
+    public CustomUserDetails(User user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return this.password; // Return actual password
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return this.email; // Use email as username
+        return user.getEmail();
     }
 
     @Override
@@ -56,5 +50,13 @@ public class Admin implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public UserRole getRole() {
+        return user.getRole();
     }
 }

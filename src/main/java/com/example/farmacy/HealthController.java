@@ -1,11 +1,9 @@
 package com.example.farmacy;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -17,9 +15,6 @@ public class HealthController {
 
     @Value("${spring.application.name:farmacy}")
     private String applicationName;
-
-    @Autowired
-    private DataSource dataSource;
 
     @GetMapping("/echo")
     public ResponseEntity<Map<String, Object>> echo() {

@@ -1,42 +1,39 @@
-# Etapa 1: Construcción del JAR con Maven
-FROM maven:3.9.9-eclipse-temurin-21 AS builder
+# Dockerfile para Spring Boot Backend - Multi-stage build
+
+# Stage 1: Build
+FROM maven:3.9-eclipse-temurin-17 AS build
+
+# Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar pom.xml y descargar dependencias primero (cache)
+# Copiar archivos de configuración de Maven
 COPY pom.xml .
+COPY mvnw .
+COPY .mvn .mvn
+
+# Descargar dependencias (se cachea si pom.xml no cambia)
 RUN mvn dependency:go-offline -B
 
-# Copiar el código fuente y construir el jar
+# Copiar código fuente
 COPY src ./src
+
+# Compilar la aplicación (skip tests para build más rápido)
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Imagen ligera para producción
-FROM eclipse-temurin:21-jre-alpine
+# Stage 2: Runtime
+FROM eclipse-temurin:17-jre-alpine
+
+# Establecer directorio de trabajo
 WORKDIR /app
 
-# Crear usuario no root para seguridad
-RUN addgroup -g 1001 -S spring && \
-    adduser -S spring -u 1001
+# Copiar el JAR compilado desde el stage de build
+COPY --from=build /app/target/*.jar app.jar
 
-# Copiar el JAR desde la etapa builder
-COPY --from=builder /app/target/*.jar app.jar
-
-# Crear directorio de logs
-RUN mkdir -p /app/logs && chown -R spring:spring /app
-
-# Cambiar a usuario no root
-USER spring:spring
-
-# Exponer puerto
+# Exponer el puerto por defecto de Spring Boot
 EXPOSE 8080
 
-# Variables de entorno por defecto
-ENV SPRING_PROFILES_ACTIVE=prod
+# Variables de entorno por defecto (pueden ser sobrescritas por docker-compose)
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
-
-# Comando de arranque con opciones JVM optimizadas
+# Comando para ejecutar la aplicación
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

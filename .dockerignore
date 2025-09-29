@@ -1,28 +1,66 @@
-# Ignorar archivos innecesarios para Docker
+# Target y build
 target/
-.git/
-.gitignore
-README.md
-.env
-.env.local
-.env.*.local
-*.log
-logs/
+build/
+!target/*.jar
+bin/
+out/
 
 # IDE
 .idea/
-.vscode/
 *.iml
-*.iws
 *.ipr
-
-# OS
-.DS_Store
-Thumbs.db
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
 
 # Maven
 .mvn/wrapper/maven-wrapper.jar
 .mvn/wrapper/maven-wrapper.properties
 
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile
+
+# Logs
+*.log
+logs/
+log/
+
+# Environment variables
+.env
+.env.*
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Documentación
+README.md
+*.md
+docs/
+
+# Archivos temporales
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Sistema
+.DS_Store
+Thumbs.db
+
 # Spring Boot
 HELP.md
+mvnw
+mvnw.cmd
