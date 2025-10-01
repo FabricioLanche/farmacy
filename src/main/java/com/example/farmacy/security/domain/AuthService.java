@@ -52,7 +52,7 @@ public class AuthService {
                 throw new AuthenticationFailedException("Contraseña incorrecta");
             }
 
-            String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+            String token = jwtUtil.generateToken(user.getDni(), user.getRole().name());
             return new LoginResponseDto(token);
 
         } catch (UserNotFoundException | AuthenticationFailedException e) {
@@ -68,6 +68,10 @@ public class AuthService {
                 throw new UserAlreadyExistsException("Ya existe un usuario con el email: " + registerRequest.getEmail());
             }
 
+            if (userRepository.existsByDni(registerRequest.getDni())) {
+                throw new UserAlreadyExistsException("Ya existe un usuario con el DNI: " + registerRequest.getDni());
+            }
+
             User newUser = User.builder()
                     .nombre(registerRequest.getNombre())
                     .apellido(registerRequest.getApellido())
@@ -78,7 +82,9 @@ public class AuthService {
                     .build();
 
             User savedUser = userRepository.save(newUser);
-            String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole().name());
+
+            // GENERA EL TOKEN CON EL DNI COMO SUBJECT
+            String token = jwtUtil.generateToken(savedUser.getDni(), savedUser.getRole().name());
             return new RegisterResponseDto(token);
 
         } catch (UserAlreadyExistsException e) {

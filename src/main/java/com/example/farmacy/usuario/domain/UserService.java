@@ -21,9 +21,10 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserResponseDto getMe(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con email: " + email));
+    public UserResponseDto getMe(String dni) {
+        User user = userRepository.findByDni(dni)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con DNI: " + dni));
+
         return new UserResponseDto(
                 user.getEmail(),
                 user.getNombre(),
@@ -46,9 +47,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponseDto updateProfile(String currentEmail, UpdateUserDto updateUserDto) {
-        User user = userRepository.findByEmail(currentEmail)
-                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con email: " + currentEmail));
+    public UserResponseDto updateProfile(String currentDNI, UpdateUserDto updateUserDto) {
+        User user = userRepository.findByDni(currentDNI)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con email: " + currentDNI));
 
         if (updateUserDto.getNombre() != null && !updateUserDto.getNombre().trim().isEmpty()) {
             user.setNombre(updateUserDto.getNombre().trim());
@@ -60,7 +61,7 @@ public class UserService {
 
         if (updateUserDto.getEmail() != null && !updateUserDto.getEmail().trim().isEmpty()) {
             String newEmail = updateUserDto.getEmail().trim();
-            if (!currentEmail.equals(newEmail)) {
+            if (!currentDNI.equals(newEmail)) {
                 if (userRepository.existsByEmail(newEmail)) {
                     throw new IllegalArgumentException("El email ya está en uso");
                 }

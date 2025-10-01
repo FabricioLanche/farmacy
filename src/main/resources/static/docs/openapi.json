@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "API de Usuarios, Autenticación y Salud",
-    "version": "1.0.0",
-    "description": "Documentación de endpoints de usuario, autenticación y estado de salud"
+    "title": "API de Usuarios, Autenticación, Compras y Salud",
+    "version": "1.1.0",
+    "description": "Documentación de endpoints de usuario, autenticación, compras y estado de salud"
   },
   "paths": {
     "/api/user/all": {
@@ -133,6 +133,76 @@
         }
       }
     },
+    "/api/compras": {
+      "post": {
+        "summary": "Registrar una compra (CLIENTE o ADMIN)",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CompraRequestDto" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Compra registrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CompraResponseDto" }
+              }
+            }
+          },
+          "400": { "description": "Datos inválidos" },
+          "401": { "description": "No autorizado" }
+        }
+      }
+    },
+    "/api/compras/me": {
+      "get": {
+        "summary": "Obtener compras propias (CLIENTE o ADMIN)",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de compras del usuario autenticado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CompraResponseDto" }
+                }
+              }
+            }
+          },
+          "401": { "description": "No autorizado" }
+        }
+      }
+    },
+    "/api/compras/all": {
+      "get": {
+        "summary": "Obtener todas las compras (solo ADMIN)",
+        "tags": ["Compras"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de todas las compras",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/CompraResponseDto" }
+                }
+              }
+            }
+          },
+          "401": { "description": "No autorizado" },
+          "403": { "description": "Prohibido" }
+        }
+      }
+    },
     "/echo": {
       "get": {
         "summary": "Echo - Estado de salud del servidor",
@@ -225,6 +295,37 @@
           "id": { "type": "integer", "example": 124 },
           "username": { "type": "string", "example": "usuario2" },
           "email": { "type": "string", "example": "correo@ejemplo.com" }
+        }
+      },
+      "CompraRequestDto": {
+        "type": "object",
+        "properties": {
+          "usuarioId": { "type": "integer", "example": 1 },
+          "productos": {
+            "type": "array",
+            "items": { "type": "integer", "example": 2 }
+          },
+          "cantidades": {
+            "type": "array",
+            "items": { "type": "integer", "example": 3 }
+          }
+        },
+        "required": ["usuarioId", "productos", "cantidades"]
+      },
+      "CompraResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer", "example": 101 },
+          "fechaCompra": { "type": "string", "format": "date-time", "example": "2025-09-30T19:50:37" },
+          "usuarioId": { "type": "integer", "example": 1 },
+          "productos": {
+            "type": "array",
+            "items": { "type": "integer", "example": 2 }
+          },
+          "cantidades": {
+            "type": "array",
+            "items": { "type": "integer", "example": 3 }
+          }
         }
       }
     }

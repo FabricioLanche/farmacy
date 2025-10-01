@@ -27,7 +27,7 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject); // subject = dni
     }
 
     public Date extractExpiration(String token) {
@@ -51,16 +51,16 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String dni, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
-        return createToken(claims, username);
+        return createToken(claims, dni);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(subject)
+                .setSubject(subject) // subject = dni
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

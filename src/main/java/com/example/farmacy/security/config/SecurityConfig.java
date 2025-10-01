@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/api/compras/**").permitAll()
                         .requestMatchers("/echo/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",

@@ -22,6 +22,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Pattern(regexp = "\\d{8,}", message = "El DNI debe tener al menos 8 dígitos")
+    @Column(name = "dni", nullable = false, unique = true, length = 12)
+    private String dni;
+
     @NotBlank
     private String nombre;
 
@@ -31,10 +35,6 @@ public class User {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
-
-    @Pattern(regexp = "\\d{8,}", message = "El DNI debe tener al menos 8 dígitos")
-    @Column(name = "dni", nullable = false, unique = true, length = 12)
-    private String dni;
 
     @Column(nullable = false, unique = true)
     private String password;
