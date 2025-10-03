@@ -43,6 +43,7 @@ public class DataInitializer {
                     .password(passwordEncoder.encode(adminPassword))
                     .dni(adminDni)
                     .role(UserRole.ADMIN)
+                    .distrito("San Borja")
                     .build();
             userRepository.save(admin);
             System.out.println("Usuario administrador creado por defecto: " + adminEmail);
