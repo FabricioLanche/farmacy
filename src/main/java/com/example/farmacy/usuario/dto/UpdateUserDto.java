@@ -14,6 +14,8 @@ public class UpdateUserDto {
 
     private String apellido;
 
+    private String distrito;
+
     @Email(message = "El email debe ser válido")
     private String email;
 

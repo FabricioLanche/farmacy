@@ -32,6 +32,9 @@ public class User {
     @NotBlank
     private String apellido;
 
+    @NotBlank
+    private String distrito;
+
     @Column(nullable = false, unique = true)
     @Email
     private String email;

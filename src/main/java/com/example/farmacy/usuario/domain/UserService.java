@@ -29,7 +29,8 @@ public class UserService {
                 user.getEmail(),
                 user.getNombre(),
                 user.getApellido(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getDistrito()
         );
     }
 
@@ -41,7 +42,8 @@ public class UserService {
                         user.getEmail(),
                         user.getNombre(),
                         user.getApellido(),
-                        user.getRole().name()
+                        user.getRole().name(),
+                        user.getDistrito()
                 ))
                 .collect(Collectors.toList());
     }
@@ -49,7 +51,7 @@ public class UserService {
     @Transactional
     public UserResponseDto updateProfile(String currentDNI, UpdateUserDto updateUserDto) {
         User user = userRepository.findByDni(currentDNI)
-                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con email: " + currentDNI));
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con DNI: " + currentDNI));
 
         if (updateUserDto.getNombre() != null && !updateUserDto.getNombre().trim().isEmpty()) {
             user.setNombre(updateUserDto.getNombre().trim());
@@ -73,13 +75,18 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(updateUserDto.getPassword()));
         }
 
+        if (updateUserDto.getDistrito() != null && !updateUserDto.getDistrito().trim().isEmpty()) {
+            user.setDistrito(updateUserDto.getDistrito().trim());
+        }
+
         User updatedUser = userRepository.save(user);
 
         return new UserResponseDto(
                 updatedUser.getEmail(),
                 updatedUser.getNombre(),
                 updatedUser.getApellido(),
-                updatedUser.getRole().name()
+                updatedUser.getRole().name(),
+                updatedUser.getDistrito()
         );
     }
 

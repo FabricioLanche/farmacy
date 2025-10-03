@@ -79,11 +79,11 @@ public class AuthService {
                     .password(passwordEncoder.encode(registerRequest.getPassword()))
                     .dni(registerRequest.getDni())
                     .role(UserRole.CLIENTE)
+                    .distrito(registerRequest.getDistrito())
                     .build();
 
             User savedUser = userRepository.save(newUser);
 
-            // GENERA EL TOKEN CON EL DNI COMO SUBJECT
             String token = jwtUtil.generateToken(savedUser.getDni(), savedUser.getRole().name());
             return new RegisterResponseDto(token);
 

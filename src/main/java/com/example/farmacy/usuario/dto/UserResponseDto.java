@@ -12,4 +12,5 @@ public class UserResponseDto {
     private String nombre;
     private String apellido;
     private String role;
+    private String distrito;
 }

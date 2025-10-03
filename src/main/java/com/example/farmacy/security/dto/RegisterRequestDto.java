@@ -27,4 +27,7 @@ public class RegisterRequestDto {
 
     @NotBlank(message = "El dni es obligatorio")
     private String dni;
+
+    @NotBlank(message = "El distrito es obligatorio")
+    private String distrito;
 }
