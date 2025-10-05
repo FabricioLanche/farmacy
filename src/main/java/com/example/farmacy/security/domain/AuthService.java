@@ -11,6 +11,7 @@ import com.example.farmacy.security.exceptions.UserNotFoundException;
 import com.example.farmacy.usuario.domain.User;
 import com.example.farmacy.usuario.domain.UserRole;
 import com.example.farmacy.usuario.infrastructure.UserRepository;
+import com.example.farmacy.utils.SequenceSyncUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SequenceSyncUtil sequenceSyncUtil;
 
     public LoginResponseDto login(LoginRequestDto loginRequest) {
         try {
@@ -63,6 +67,9 @@ public class AuthService {
     }
 
     public RegisterResponseDto register(RegisterRequestDto registerRequest) {
+
+        sequenceSyncUtil.syncSequence("users", "id");
+
         try {
             if (userRepository.existsByEmail(registerRequest.getEmail())) {
                 throw new UserAlreadyExistsException("Ya existe un usuario con el email: " + registerRequest.getEmail());

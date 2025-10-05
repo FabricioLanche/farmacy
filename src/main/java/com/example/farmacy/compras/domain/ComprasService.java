@@ -6,6 +6,7 @@ import com.example.farmacy.compras.infrastructure.ComprasRepository;
 import com.example.farmacy.security.exceptions.UserNotFoundException;
 import com.example.farmacy.usuario.domain.User;
 import com.example.farmacy.usuario.infrastructure.UserRepository;
+import com.example.farmacy.utils.SequenceSyncUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class ComprasService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SequenceSyncUtil sequenceSyncUtil;
+
     public Long getUsuarioIdFromDni(String dni) {
         User user = userRepository.findByDni(dni)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con DNI: " + dni));
@@ -29,6 +33,8 @@ public class ComprasService {
     }
 
     public CompraResponseDto registrarCompra(CompraRequestDto dto) {
+        sequenceSyncUtil.syncSequence("compras", "id");
+
         if (!userRepository.existsById(dto.getUsuarioId())) {
             throw new IllegalArgumentException("El usuario no existe");
         }
