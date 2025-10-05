@@ -14,18 +14,22 @@ public class SequenceSyncUtil {
     @Transactional
     public void syncSequence(String tableName, String idColumn) {
         try {
-            // Obtener el valor máximo actual del ID
-            Long maxId = (Long) entityManager
+            Long maxId = ((Number) entityManager
                     .createNativeQuery("SELECT COALESCE(MAX(" + idColumn + "), 0) FROM " + tableName)
-                    .getSingleResult();
+                    .getSingleResult()).longValue();
 
-            // Actualizar la secuencia (PostgreSQL)
-            String seqQuery = "SELECT setval(pg_get_serial_sequence('" + tableName + "', '" + idColumn + "'), " + maxId + ")";
+            long newSequenceValue = (maxId == 0) ? 1 : maxId;
+
+            String seqQuery = String.format(
+                    "SELECT setval(pg_get_serial_sequence('%s', '%s'), %d, %s)",
+                    tableName, idColumn, newSequenceValue, (maxId != 0)
+            );
+
             entityManager.createNativeQuery(seqQuery).getSingleResult();
 
-            System.out.println("✅ Secuencia sincronizada para " + tableName + " (nuevo valor: " + maxId + ")");
+            System.out.printf("✅ Secuencia sincronizada para %s (nuevo valor: %d)%n", tableName, newSequenceValue);
         } catch (Exception e) {
-            System.err.println("⚠️ Error al sincronizar secuencia para " + tableName + ": " + e.getMessage());
+            System.err.printf("⚠️ Error al sincronizar secuencia para %s: %s%n", tableName, e.getMessage());
         }
     }
 }
