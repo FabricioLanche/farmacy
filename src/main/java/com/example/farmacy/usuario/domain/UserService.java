@@ -26,6 +26,7 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con DNI: " + dni));
 
         return new UserResponseDto(
+                user.getDni(),
                 user.getEmail(),
                 user.getNombre(),
                 user.getApellido(),
@@ -39,6 +40,7 @@ public class UserService {
 
         return users.stream()
                 .map(user -> new UserResponseDto(
+                        user.getDni(),
                         user.getEmail(),
                         user.getNombre(),
                         user.getApellido(),
@@ -82,6 +84,7 @@ public class UserService {
         User updatedUser = userRepository.save(user);
 
         return new UserResponseDto(
+                user.getDni(),
                 updatedUser.getEmail(),
                 updatedUser.getNombre(),
                 updatedUser.getApellido(),
